@@ -1,0 +1,4 @@
+baseURL = "https://robgc.github.io/sento-blog"
+languageCode = "en-us"
+title = "Sento Blog"
+theme = "hugo-theme-minos"
