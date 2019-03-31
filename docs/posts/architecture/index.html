@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>print(&#39;Hello world!&#39;) // Sento Blog</title>
+    <title>Defining the architecture // Sento Blog</title>
 
         <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -9,11 +9,11 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
-        <meta property="og:title" content="print(&#39;Hello world!&#39;)" />
+        <meta property="og:title" content="Defining the architecture" />
     <meta property="og:description" content="" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="en_US" />
-    <meta property="og:url" content="https://robgc.github.io/sento-blog/posts/welcome/" />
+    <meta property="og:url" content="https://robgc.github.io/sento-blog/posts/architecture/" />
     
 
     <link href="" rel="alternate" type="application/rss+xml" title="Sento Blog" />
@@ -51,12 +51,12 @@
     <div class="article-inner">
         
         <header class="article-header">
-            <h1 class="article-title" itemprop="name">print(&#39;Hello world!&#39;)</h1>
+            <h1 class="article-title" itemprop="name">Defining the architecture</h1>
         </header>
         
         <div class="article-meta">
-            <a href="/sento-blog/posts/welcome/" class="article-date">
-                <time datetime='2018-12-01T19:09:49.000&#43;01:00' itemprop="datePublished">2018-12-01</time>
+            <a href="/sento-blog/posts/architecture/" class="article-date">
+                <time datetime='2019-03-31T14:44:52.000&#43;02:00' itemprop="datePublished">2019-03-31</time>
             </a>
             
             
@@ -65,46 +65,58 @@
         <div class="article-entry" itemprop="articleBody">
             
 
-<p>Welcome! My name is Roberto García Calero, I&rsquo;m a Software
-Engineering student at the University of Seville and also a proud member
-of Geographica, an awesome location intelligence company!</p>
+<p>In this post I will introduce you the architecture of Sento. The project
+consists of the following components:</p>
 
-<p>I want to introduce you Sento, my Undergraduate Thesis Project.</p>
+<h1 id="crawler">Crawler</h1>
 
-<h2 id="the-idea">The idea</h2>
+<p>This piece of software communicates with <a href="https://developer.twitter.com/en/docs/api-reference-index">Twitter&rsquo;s</a>
+and <a href="https://wiki.openstreetmap.org/wiki/Nominatim">OpenStreeMap Nominatim&rsquo;s</a>
+APIs and does the following tasks:</p>
 
-<p>Sento, <em>sentiment</em> in Esperanto, will be the combination of the sentiment
-analysis teachings I will learn during this year and the professional
-experience I&rsquo;m gaining as a GIS (Geographic Information System)
-engineer at my job. It will also be a new ground for trying out new
-programming languages and libre/open source technologies.</p>
+<ul>
+<li>Extracts the text content in tweets beloging to the current available trends.</li>
+<li>Extracts metadata information from the trends themselves*, such as:
 
-<p>Sento will be a desktop web application which provides its users
-insights about how Twitter users have reacted to current trending
-topics. The information will be presented on top of a map, giving
-the possibility to observe diffrences on how a person reacts to a topic
-based on where he/she lives and also see how the relevance of a topic
-might change depending of the region.</p>
+<ul>
+<li>How did the trend rank during its lifetime in a certain location.</li>
+<li>In which locations did the trend appear.</li>
+<li>Where did the trend start.</li>
+</ul></li>
+<li>Extracts the geometry of the locations where trends are available.</li>
+</ul>
 
-<h2 id="the-workflow">The workflow</h2>
+<p>Retreived data will be stored in a PostgreSQL database using defined models.</p>
 
-<p>This is a very simple outline of how Sento will work:</p>
+<p>* In order to provide precise metadata it is required that the crawler is
+running before the trend starts.</p>
 
-<ol>
-<li>Sento will collect tweets from the trending topics of a country.</li>
-<li>The collected tweets will be processed using sentiment analysis techniques.</li>
-<li>The processing results will be stored in a convinient way for them to be
-published through an API.</li>
-<li>The API will serve the results to the users who accessed the app.</li>
-<li>The app&rsquo;s frontend will render the results.</li>
-</ol>
+<h1 id="processing">Processing</h1>
 
-<h2 id="closing">Closing</h2>
+<p>Processes the tweets extracted for each trend and categorises them in three
+groups: positive, neutral o negative perception towards the trend&rsquo;s topic.</p>
 
-<p>After a brief introduction to the idea of Sento, I would like to share with
-you an interesting musical map!</p>
+<p>In order to categorise each text it is necessary apply Natural Language
+Processing techniques focused on sentiment analysis.</p>
 
-<iframe src="https://spotifymaps.github.io/musicalcities/" width="100%" height="600" frameborder="0"></iframe>
+<h1 id="api">API</h1>
+
+<p>Exposes the results obtained in the processing pipeline and the data retrieved
+in the extraction pipeline through a HTTP API. This API will enable other
+applications to consume the data produced.</p>
+
+<h1 id="ui">UI</h1>
+
+<p>Consumes the data exposed through Sento&rsquo;s API, enabling analysis
+to be carried out. In order to being able to render a map,
+an <a href="https://openmaptiles.org/">OpenMapTiles Server</a> self hosted instance
+will be used to deliver <a href="https://github.com/mapbox/vector-tile-spec">Mapbox Vector Tiles</a>.</p>
+
+<h1 id="the-big-picture">The big picture</h1>
+
+<p>The following diagram is a <em>big picture</em> containing all the described pieces.</p>
+
+<p><img src="/sento-blog/images/architecture.png" alt="Architecture" /></p>
 
         </div>
 
@@ -114,12 +126,11 @@ you an interesting musical map!</p>
             <h3>Contents</h3>
             <nav id="TableOfContents">
 <ul>
-<li>
-<ul>
-<li><a href="#the-idea">The idea</a></li>
-<li><a href="#the-workflow">The workflow</a></li>
-<li><a href="#closing">Closing</a></li>
-</ul></li>
+<li><a href="#crawler">Crawler</a></li>
+<li><a href="#processing">Processing</a></li>
+<li><a href="#api">API</a></li>
+<li><a href="#ui">UI</a></li>
+<li><a href="#the-big-picture">The big picture</a></li>
 </ul>
 </nav>
         </div>
@@ -133,12 +144,10 @@ you an interesting musical map!</p>
     </div>
     <nav id="article-nav">
     
-    <a href="/sento-blog/posts/architecture/" id="article-nav-newer" class="article-nav-link-wrap">
-        <div class="article-nav-title"><span>&lt;</span>&nbsp;
-            Defining the architecture
-        </div>
-    </a>
     
+    <a href="/sento-blog/posts/welcome/" id="article-nav-older" class="article-nav-link-wrap">
+        <div class="article-nav-title">print(&#39;Hello world!&#39;)&nbsp;<span>&gt;</span></div>
+    </a>
     
 </nav>
 
