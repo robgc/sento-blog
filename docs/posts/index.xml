@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Sento Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 31 Mar 2019 14:44:52 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 31 Mar 2019 22:18:33 +0200</lastBuildDate>
     
 	<atom:link href="https://robgc.github.io/sento-blog/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building Sento Crawler</title>
+      <link>https://robgc.github.io/sento-blog/posts/crawler/</link>
+      <pubDate>Sun, 31 Mar 2019 22:18:33 +0200</pubDate>
+      
+      <guid>https://robgc.github.io/sento-blog/posts/crawler/</guid>
+      <description>During the development of Sento Crawler I had to face some technical challenges and take important steps towards the definition and implementation of the data pipeline.
+The technical goals At the start of development a initial set of requirements were set:
+ Easily configurable: the user should not need to read the code or modify it in order to set up an instance. Asynchronous: the tool was expected to perform heavy usage of network communications, asynchronous programming was a strong requirement, as we always want loose no time on blocked I/O operations.</description>
+    </item>
     
     <item>
       <title>Defining the architecture</title>
